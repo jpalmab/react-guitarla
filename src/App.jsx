@@ -7,40 +7,35 @@ import { db } from "./data/db"
 
 function App() {
 
-  //STATE, la convenci[o]n en REACT ME DICE si mi state se llama AUTH y
-  //lo que modifica el state se debe empezar en set, en este
-  //caso setAuth
-  // const [auth, setAuth] = useState(true)
-  //const [total, setTotal] = useState(0)
-  //const [cart, setCart] = useState([])
-
-  //  const [auth, setAuth] = useState(false)
-  //useEffect sirve y se ejecuta dependiendo las dependencias que se le ponga,
-  //renderizando as[i] estas, en este caso la variable auth, se modifica el tiempo
-  //y estado m[a]s abajo en el c[o]digo, pero se vuelve a ejecutar useEffect
-  //useEffect(() => {
-  //if (auth) {
-  //console.log('Autenticado')
-  //}
-  //console.log('componente listo o escuchando por Auth')
-  //}, [auth])
-
-  //  setTimeout(() => {
-  //    setAuth(true)
-  //  }, 3000)
-
   const [data, setData] = useState(db)
   //console.log(data)
 
   const [cart, setCart] = useState([])
 
+  function addToCart(item) {
+    const itemExists = cart.findIndex(guitar => guitar.id === item.id)
+
+    //ya existe en el carrito
+    if (itemExists >= 0) {
+      //copia del carrito
+      const updatedCart = [...cart]
+      updatedCart[itemExists].quantity++
+      setCart(updatedCart)
+    }
+    else {
+      item.quantity = 1
+      setCart([...cart, item])
+    }
+  }
 
 
   return (
     <>
 
 
-      <Header />
+      <Header
+        cart={cart}
+      />
 
 
       <main className="container-xl mt-5">
@@ -53,6 +48,7 @@ function App() {
               key={guitar.id}
               guitar={guitar}
               setCart={setCart}
+              addToCart={addToCart}
             />
 
           ))}
